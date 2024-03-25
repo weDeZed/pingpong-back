@@ -9,23 +9,8 @@ mongo_client = Mongo2Client(db_name='pingpong')
 
 @joueur_bp.route('/ajouter_joueur', methods=['POST'])
 def ajouter_nouveau_joueur():
-    nom = request.form.get('nom')
-    prenom = request.form.get('prenom')
-    age = request.form.get('age', type=int)
-    sexe = request.form.get('sexe')
-    point = request.form.get('point', type=int)
-    categorie = request.form.get('catégorie')
-
-    joueur = {
-        "nom": nom,
-        "prenom": prenom,
-        "age": age,
-        "sexe": sexe,
-        "categorie": categorie,
-        "point": point
-    }
-
-    resultat = mongo_client.db['joueur'].insert_one(joueur)
+    data = request.get_json()
+    resultat = mongo_client.db['joueur'].insert_one(data)
 
     if resultat.inserted_id:
         return jsonify({"succes": True, "id_insertion": str(resultat.inserted_id)}), 201
